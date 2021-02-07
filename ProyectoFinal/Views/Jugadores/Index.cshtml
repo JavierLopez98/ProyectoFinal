@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ProyectoFinal.Models.Jugador>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+
+<form method="post">
+    <label>Jugador a buscar:</label>
+    <input type="text" name="nick" />
+    
+    <button type="submit" class="btn btn-secondary">Buscar</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nick)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Funcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdEquipo)
+            </th>            
+            @*<th>
+                @Html.DisplayNameFor(model => model.Foto)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nick)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Funcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdEquipo)
+            </td>
+            @*<td>
+                <img src="~/Images/@item.Foto" style="width:75px;height:auto" />
+            </td>*@
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@ViewData["Mensaje"]

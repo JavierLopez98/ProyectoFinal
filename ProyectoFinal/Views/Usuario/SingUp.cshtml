@@ -1,0 +1,68 @@
+﻿@model List<Equipo>
+
+@{
+    ViewData["Title"] = "SingUp";
+}
+
+<h1>SingUp</h1>
+
+<h4>Jugador</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+           
+            <div class="form-group">
+                <label class="control-label">Nombre</label>
+                <input type="text" name="Nombre" class="form-control" />
+                
+            </div>
+            <div class="form-group">
+                <label class="control-label">Apodo</label>
+                <input type="text" name="Nick" class="form-control" />
+                
+            </div>
+            <div class="form-group">
+                <label class="control-label">Funcion</label>
+                <input type="text" name="Funcion" class="form-control" />
+                
+            </div>
+            <div class="form-group">
+                <select name="idEquipo">
+                    @foreach(Equipo eq in Model)
+                    {
+                        <option value="@eq.IdEquipo">@eq.Nombre</option>
+                    }
+                </select>
+                @*<label asp-for="IdEquipo" class="control-label"></label>
+                <input asp-for="IdEquipo" class="form-control" />
+                <span asp-validation-for="IdEquipo" class="text-danger"></span>*@
+            </div>
+            <div class="form-group">
+                <label class="control-label">Correo</label>
+                <input type="email" name="Correo" class="form-control" />
+                
+            </div>
+            <div class="form-group">
+                <label class="control-label">Contraseña</label>
+                <input type="password" name="Password" class="form-control" />
+                
+            </div>
+            <div class="form-group">
+                <label>Imagen</label>
+                <input type="file"class="form-control-file" name="foto" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
