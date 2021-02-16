@@ -1,0 +1,140 @@
+﻿@if (!Context.User.Identity.IsAuthenticated)
+{
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" asp-action="Index" asp-controller="Home">Inicio</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Index" asp-controller="Ligas">Ligas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Index" asp-controller="Equipo">Equipos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-action="Index" asp-controller="Jugadores">Jugadores</a>
+                </li>
+
+
+
+                @*<li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>*@
+            </ul>
+            <div class="form-inline my-2 my-lg-0">
+                <a asp-controller="Usuario" asp-action="Login" class="nav-item">Sign in</a>
+            </div>
+        </div>
+    </nav>
+
+}
+else
+{
+    if (!Context.User.IsInRole("Admin"))
+    {
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" asp-action="Index" asp-controller="Home">Inicio</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="Ligas">Ligas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="Equipo">Equipos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="Jugadores">Jugadores</a>
+                    </li>
+
+
+
+                    @*<li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown01">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>*@
+                </ul>
+                <div class="form-inline my-2 my-lg-0">
+                        <a class="nav-link dropdown-toggle" asp-action="Index" asp-controller="Jugadores" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@Context.User.Identity.Name</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" asp-action="Perfil" asp-controller="Jugadores">Perfil</a>
+                            <a asp-action="Logout" asp-controller="Usuario" class="dropdown-item">Log out</a>
+                        </div>
+                </div>
+            </div>
+        </nav>
+
+
+
+    }
+    else
+    {
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" asp-action="Index" asp-controller="Home">Inicio</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ligas</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Ligas">Listado</a>
+                            <a class="dropdown-item" asp-action="NuevaLiga" asp-controller="Ligas">Nueva Liga</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" asp-action="Index" asp-controller="Equipos" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Equipos</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Equipo">Listado</a>
+                            <a class="dropdown-item" asp-action="NuevoEquipo" asp-controller="Equipo">Nuevo Equipo</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="Jugadores">Jugadores</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" asp-action="Index" asp-controller="Jugadores" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Partidos</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Partidos">Partidos</a>
+                            <a class="dropdown-item" asp-action="NuevoPartido"asp-controller="Partidos">Nuevo Partido</a>
+                            
+                        </div>
+                    </li>
+                </ul>
+                <div class="form-inline my-2 my-lg-0">
+                       
+                            
+                            <a asp-action="Logout" asp-controller="Usuario" class="nav-item">Log out</a>
+                        
+                </div>
+            </div>
+        </nav>
+       
+
+        
+    }
+}

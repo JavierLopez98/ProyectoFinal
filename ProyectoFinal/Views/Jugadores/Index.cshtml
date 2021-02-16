@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Index";
+    List<Equipo> equipos = ViewData["equipos"] as List<Equipo>;
+    Equipo equipo = ViewData["Equipo"] as Equipo;
+    
 }
 
 <h1>Index</h1>
@@ -10,7 +13,21 @@
 <form method="post">
     <label>Jugador a buscar:</label>
     <input type="text" name="nick" />
-    
+    <select class="form-control-sm" name="equipo">
+        @if (equipo != null)
+        {
+            <option value="@equipo.IdEquipo" disabled selected>@equipo.Nombre</option>
+        }
+        else
+        {
+            <option value="" disabled selected>Todos</option>
+        }
+        <option value="">Todos</option>
+        @foreach (Equipo eq in equipos)
+        {
+            <option value="@eq.IdEquipo">@eq.Nombre</option>
+        }
+    </select>
     <button type="submit" class="btn btn-secondary">Buscar</button>
 </form>
 <table class="table">
@@ -22,36 +39,33 @@
             <th>
                 @Html.DisplayNameFor(model => model.Funcion)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdEquipo)
-            </th>            
-            @*<th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
+    if (item.IdJugador > 0)
+    {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Nick)
+                <a asp-action="Detalles" asp-controller="Jugadores" asp-route-id="@item.IdJugador">
+                    @Html.DisplayFor(modelItem => item.Nick)
+                </a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Funcion)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdEquipo)
-            </td>
-            @*<td>
-                <img src="~/Images/@item.Foto" style="width:75px;height:auto" />
-            </td>*@
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
+            @if (Context.User.IsInRole("Admin"))
+            {
+        <td>
+            <a class="btn btn-primary" asp-controller="Jugadores" asp-action="ModificarJugador" asp-route-id="@item.IdJugador"> Modificar Jugador</a>
+
+            <a class="btn btn-warning" asp-controller="Jugadores" asp-action="EliminarJugador" asp-route-id="@item.IdJugador"> Eliminar Jugador</a>
+        </td>
+            }
         </tr>
+    }
 }
     </tbody>
 </table>

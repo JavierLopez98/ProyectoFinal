@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ProyectoFinal.Models.Liga>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form method="get">
+    <label>Buscar equipo:</label>
+    <input type="text" name="nombre" class="form-control" />
+    <button type="submit" class="btn btn-secondary"></button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+    if (item.IdLiga > 0)
+    {
+        <tr>
+            <td>
+                <a asp-action="Detalles" asp-controller="Ligas">
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </a>
+            </td>
+            @if (Context.User.IsInRole("Admin"))
+            {
+        <td>
+            <a class="btn btn-primary" asp-controller="Liga" asp-action="ModificarLiga" asp-route-id="@item.IdLiga"> Modificar Liga</a>
+
+            <a class="btn btn-warning" asp-controller="Liga" asp-action="EliminarLiga" asp-route-id="@item.IdLiga"> Eliminar Liga</a>
+        </td>
+            }
+        </tr>
+    }
+}
+    </tbody>
+</table>

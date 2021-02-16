@@ -1,0 +1,67 @@
+﻿@model ProyectoFinal.Models.Jugador
+
+@{
+    ViewData["Title"] = "ModificarJugador";
+    List<Equipo> equipos = ViewData["equipos"] as List<Equipo>;
+    Equipo equipo = ViewData["equipo"] as Equipo;
+}
+
+<h1>ModificarJugador</h1>
+
+<h4>Jugador</h4>
+<hr />
+<a asp-action="cambiarContraseña" asp-controller="Jugadores">Cambiar contraseña</a>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ModificarJugador" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden>
+                <label asp-for="IdJugador" class="control-label"></label>
+                <input asp-for="IdJugador" class="form-control" />
+                <span asp-validation-for="IdJugador" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nick" class="control-label"></label>
+                <input asp-for="Nick" class="form-control" />
+                <span asp-validation-for="Nick" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Funcion" class="control-label"></label>
+                <input asp-for="Funcion" class="form-control" />
+                <span asp-validation-for="Funcion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                
+                <select>
+                    <option value="@equipo.IdEquipo" selected disabled>@equipo.Nombre</option>
+                    @foreach (Equipo eq in equipos)
+                    {
+                        <option value="@eq.IdEquipo">@eq.Nombre</option>
+                    }
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="Foto" class="control-label"></label>
+                <input name="fotojugador" class="form-control-file" />
+                
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

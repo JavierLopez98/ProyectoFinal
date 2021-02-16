@@ -19,5 +19,7 @@ namespace ProyectoFinal.Data
         public DbSet<Equipo> Equipos { get; set; }
 
         public DbSet<Liga> Ligas { get; set; }
+
+        public DbSet<Partidos> Partidos { get; set; }
     }
 }

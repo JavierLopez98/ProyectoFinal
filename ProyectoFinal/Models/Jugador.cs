@@ -17,8 +17,8 @@ namespace ProyectoFinal.Models
         public String Funcion { get; set; }
         public int IdEquipo { get; set; }
         public String Correo { get; set; }
-        public byte[] Password { get; set; }
-        public String Salt { get; set; }
+        public String Password { get; set; }
+        
         public String Foto { get; set; }
     }
 }
