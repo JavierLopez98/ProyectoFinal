@@ -1,0 +1,28 @@
+﻿@model ProyectoFinal.Models.Liga
+
+@{
+    ViewData["Title"] = "EliminarLiga";
+}
+
+<h1>EliminarLiga</h1>
+
+<h3>¿Estás seguro de querer eliminar esta liga?</h3>
+<div>
+    <h4>Liga</h4>
+    <hr />
+    <dl class="row">
+        
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+        
+    </dl>
+    
+    <form asp-action="EliminarLiga">
+        <input type="submit" value="Delete" name="accion" class="btn btn-danger" /> |
+        <input type="submit" value="Cancel" name="accion" class="btn btn-warning" />
+    </form>
+</div>

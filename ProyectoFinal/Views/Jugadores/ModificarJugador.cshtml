@@ -10,8 +10,8 @@
 
 <h4>Jugador</h4>
 <hr />
-<a asp-action="cambiarContraseña" asp-controller="Jugadores">Cambiar contraseña</a>
-<div class="row">
+
+<div class="d-flex justify-content-md-center">
     <div class="col-md-4">
         <form asp-action="ModificarJugador" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -36,7 +36,7 @@
                 <span asp-validation-for="Funcion" class="text-danger"></span>
             </div>
             <div class="form-group">
-                
+
                 <select>
                     <option value="@equipo.IdEquipo" selected disabled>@equipo.Nombre</option>
                     @foreach (Equipo eq in equipos)
@@ -45,11 +45,11 @@
                     }
                 </select>
             </div>
-            
+
             <div class="form-group">
                 <label asp-for="Foto" class="control-label"></label>
                 <input name="fotojugador" class="form-control-file" />
-                
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

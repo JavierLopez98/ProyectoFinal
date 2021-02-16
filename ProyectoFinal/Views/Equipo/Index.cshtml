@@ -6,62 +6,83 @@
     Liga lig = ViewData["Liga"] as Liga;
 }
 
-<h1>Equipos</h1>
-<form method="post">
-    <select class="custom-select" name="liga">
-        @if (lig != null)
-        {
-        <option value="@lig.IdLiga" selected disabled>@lig.Nombre</option>
-        }
-        <option value="">Todos</option>
-        @foreach(Liga liga in ligas)
-        {
-            <option value="@liga.IdLiga">@liga.Nombre</option>
-        }
-    </select>
-    <button type="submit">Buscar</button>
-</form>
-
-<table class="table">
-    <thead>
-        <tr>
-            
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th>Liga</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-    if (item.IdEquipo > 0)
-    {
-        <tr>
-            
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                <a asp-action="Detalles" asp-route-id="@item.IdEquipo">
-                    
-                    <img src="~/Images/@item.Foto" style="width:50px;height:auto"/>
-                </a>
-            </td>
-            @if (Context.User.IsInRole("Admin"))
-            {
-        <td>
-            <a class="btn btn-primary" asp-controller="Equipo" asp-action="ModificarEquipo" asp-route-id="@item.IdEquipo"> Modificar Equipo</a>
-           
-            <a class="btn btn-warning" asp-controller="Equipo" asp-action="EliminarEquipos" asp-route-id="@item.IdEquipo"> Eliminar Equipo</a>
-           
-        </td>
-            }
-        </tr>
+@section estilos{ 
+<style>
+    .contenedor {
+        background-color: lightgray;
+        border: 1px solid lightgray;
+        border-radius: 25px
     }
+</style>
 }
-    </tbody>
-</table>
+
+
+
+<div class="contenedor">
+    <h1>Equipos</h1>
+    <div class="d-flex justify-content-md-center">
+
+        <div class="col-md-4">
+
+            <form method="post">
+                <select class="custom-select" name="liga">
+                    @if (lig != null)
+                    {
+                        <option value="@lig.IdLiga" selected disabled>@lig.Nombre</option>
+                    }
+                    <option value="">Todos</option>
+                    @foreach (Liga liga in ligas)
+                    {
+                        <option value="@liga.IdLiga">@liga.Nombre</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-secondary">Buscar</button>
+            </form>
+
+            <table class="table">
+                <thead>
+                    <tr>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nombre)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Foto)
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        if (item.IdEquipo > 0)
+                        {
+                            <tr>
+
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Nombre)
+                                </td>
+                                <td>
+                                    <a asp-action="Detalles" asp-route-id="@item.IdEquipo">
+
+                                        <img src="~/Images/@item.Foto" style="width:50px;height:auto" />
+                                    </a>
+                                </td>
+                                @if (Context.User.IsInRole("Admin"))
+                                {
+                                    <td>
+                                        <a class="btn btn-primary" asp-controller="Equipo" asp-action="ModificarEquipo" asp-route-id="@item.IdEquipo"> Modificar Equipo</a>
+
+                                        <a class="btn btn-warning" asp-controller="Equipo" asp-action="EliminarEquipos" asp-route-id="@item.IdEquipo"> Eliminar Equipo</a>
+
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

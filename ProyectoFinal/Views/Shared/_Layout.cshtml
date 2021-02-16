@@ -7,9 +7,7 @@
 
 
 <head>
-    @if (IsSectionDefined("estilos")) {
-        RenderSection("estilos");
-    }
+
 
 
 
@@ -23,6 +21,19 @@
 
     <!-- Custom styles for this template -->
     <link href="~/css/starter-template.css" rel="stylesheet">
+
+    @if (IsSectionDefined("estilos"))
+    {
+        RenderSection("estilos");
+    }
+    <style>
+        body {
+            background-image: url("../Images/backgroundimgPrincipal.jpg") !important;
+            background-repeat: no-repeat;
+            background-image: cover;
+            margin: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -35,17 +46,17 @@
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
-                
+
                 <partial name="_PartialMenuUsuario" />
 
                 @*<li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-        </li>*@
+                        <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>*@
             </ul>
             <div class="form-inline my-2 my-lg-0">
                 <partial name="_PartialMenuUsuario" />
@@ -54,19 +65,19 @@
     </nav>
 
     <main role="main" class="container">
-
-        <div class="starter-template">
-            @RenderBody()
+        <div class="fondo">
+            <div class="starter-template">
+                @RenderBody()
+            </div>
         </div>
-
     </main><!-- /.container -->
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="~/js/jquery-3.2.1.slim.min.js" ></script>
+    <script src="~/js/jquery-3.2.1.slim.min.js"></script>
     <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
     <script src="~/js/popper.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
-    @RenderSection("scripts",false)
+    @RenderSection("scripts", false)
 </body>
 </html>

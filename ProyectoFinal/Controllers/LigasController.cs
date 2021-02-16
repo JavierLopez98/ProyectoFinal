@@ -26,6 +26,11 @@ namespace ProyectoFinal.Controllers
             return View(this.repo.GetLigas());
         }
 
+        public IActionResult Detalles(int id)
+        {
+            return View(this.repo.GetLigaId(id));
+        }
+
         public IActionResult ModificarLiga(int id)
         {
 
@@ -36,6 +41,29 @@ namespace ProyectoFinal.Controllers
         {
             this.repo.ModificarLiga(lig.IdLiga, lig.Nombre, lig.Descripcion);
             return RedirectToAction("Index", "Ligas");
+        }
+        public IActionResult NuevaLiga()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult NuevaLiga(Liga lig)
+        {
+            this.repo.NuevaLiga(lig.Nombre, lig.Descripcion);
+            return RedirectToAction("Index", "Liga");
+        }
+        public IActionResult EliminarLiga(int id)
+        {
+            return View(this.repo.GetLigaId(id));
+        }
+        [HttpPost]
+        public IActionResult EliminarLiga(int id,String accion)
+        {
+            if (accion == "Delete")
+            {
+                this.repo.EliminarLiga(id);
+            }
+            return RedirectToAction("Index", "Liga");
         }
     }
 }

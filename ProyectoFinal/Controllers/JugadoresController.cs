@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Filters;
+using ProyectoFinal.Helpers;
 using ProyectoFinal.Models;
 using ProyectoFinal.Repositories;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,21 +16,24 @@ namespace ProyectoFinal.Controllers
     public class JugadoresController : Controller
     {
         RepositoryJugadores repo;
-        public JugadoresController(RepositoryJugadores repo)
+        PathProvider provider;
+        public JugadoresController(RepositoryJugadores repo,PathProvider provider)
         {
             this.repo = repo;
+            this.provider = provider;
         }
-        public IActionResult Index(int? equipo)
+        public IActionResult Index(int? pagina)
         {
+
+            if (pagina == null)
+            {
+                pagina = 1;
+            }
+            
             ViewData["Equipos"] = this.repo.GetEquipos();
-            if (equipo != null)
-            {
-                return View(this.repo.GetJugadoresEquipo(equipo.Value));
-            }
-            else
-            {
-                return View(this.repo.GetJugadores());
-            }
+            ViewData["registros"] = this.repo.GetJugadores().Count;
+            return View(this.repo.PaginarJugador(pagina.Value-1));
+            
             
         }
         [HttpPost]
@@ -35,7 +41,9 @@ namespace ProyectoFinal.Controllers
         {
             ViewData["Equipo"] = new Equipo();
             ViewData["Equipos"] = this.repo.GetEquipos();
+            ViewData["registros"] = this.repo.GetJugadores().Count;
             List<Jugador> jugadores;
+           
             if (equipo != null)
             {
                 ViewData["Equipo"] = this.repo.GetEquipoId(equipo.Value);
@@ -57,7 +65,7 @@ namespace ProyectoFinal.Controllers
                 }
                 else
                 {
-                    jugadores = this.repo.GetJugadores();
+                    jugadores = this.repo.PaginarJugador(0);
                         if (jugadores.Count() == 0) ViewData["Mensaje"] = "No se han encontrado jugadores";
                 }
                 
@@ -86,8 +94,27 @@ namespace ProyectoFinal.Controllers
             return View(jug);
         }
         [HttpPost]
-        public IActionResult ModificarJugador()
+        public async Task<IActionResult> ModificarJugador(int id,String nombre,String nick,String Funcion,int equipo,IFormFile fotojugador)
         {
+            
+            if (fotojugador != null)
+            {
+                String filename = Toolkit.FilenameNormalizer(fotojugador.FileName);
+                String ruta = this.provider.MapPath(filename, Folders.Images);
+
+                using (var stream = new FileStream(ruta, FileMode.Create))
+                {
+                    await fotojugador.CopyToAsync(stream);
+
+
+                }
+                this.repo.ModificarJugadorFoto(id, nick, nombre, Funcion,filename, equipo);
+            }
+            else
+            {
+                this.repo.ModificarJugador(id, nick, nombre, Funcion, equipo);
+
+            }
             return RedirectToAction("Index", "Jugadores");
         }
 

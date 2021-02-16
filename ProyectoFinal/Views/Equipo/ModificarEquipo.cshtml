@@ -10,7 +10,7 @@
 
 <h4>Equipo</h4>
 <hr />
-<div class="row">
+<div class="d-flex justify-content-md-center">
     <div class="col-md-4">
         <form asp-action="ModificarEquipo" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -26,9 +26,9 @@
             </div>
             <div class="form-group">
                 <select class="form-control" name="liga">
-                   
+
                     <option value="@lig.IdLiga" selected disabled>@lig.Nombre</option>
-                    @foreach(Liga liga in ligas)
+                    @foreach (Liga liga in ligas)
                     {
                         <option value="@liga.IdLiga">@liga.Nombre</option>
                     }
@@ -37,7 +37,7 @@
             <div class="form-group">
                 <label asp-for="Foto" class="control-label"></label>
                 <input name="fotoequipo" type="file" class="form-control" />
-                
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

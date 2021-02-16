@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using MvcCore.Helpers;
 using ProyectoFinal.Data;
+using ProyectoFinal.Helpers;
 using ProyectoFinal.Models;
 using System;
 using System.Collections.Generic;
@@ -17,15 +18,17 @@ namespace ProyectoFinal.Repositories
     {
         EquipoContext context;
         IConfiguration configuration;
+        private int ElementosPagina;
         public RepositoryJugadores(EquipoContext context,IConfiguration configuration)
         {
             this.configuration = configuration;
             this.context = context;
+            ElementosPagina=6;
         }
         #region Jugadores
         public List<Jugador> GetJugadores()
         {
-            return this.context.Jugadores.ToList();
+            return this.context.Jugadores.Where(x=>x.IdJugador>0).ToList();
         }
 
         public List<Jugador> buscarJugadorNick(String nick)
@@ -54,6 +57,18 @@ namespace ProyectoFinal.Repositories
             var consulta = from datos in this.context.Jugadores where datos.IdEquipo == idequipo select datos;
             return consulta.ToList();
         }
+
+        public List<Jugador> PaginarJugador(int pagenumber)
+        {
+           
+            int elementospagina = 6;
+            //List<Jugador> jugadores = this.context.Jugadores.Where(x=>x.IdJugador>0).ToList()
+            //  .Skip(numberOfObjectsPerPage * pagenumber)
+            //  .Take(numberOfObjectsPerPage).ToList() ;
+
+            List<Jugador> jugadores = this.context.Jugadores.Where(x => x.IdJugador > 0).Page(elementospagina, pagenumber).ToList();
+            return jugadores;
+        }
         #region ProceduresJugadores
 //        alter procedure NuevoJugador(@Nombre nvarchar(50),@Nick nvarchar(50),@Funcion nvarchar(50),@idequipo int,@correo nvarchar(200),@Password nvarchar(50),@Foto nvarchar(100))as
 //declare @maxId int
@@ -62,7 +77,7 @@ namespace ProyectoFinal.Repositories
 
 //go
         #endregion
-        public void CrearJugador(String Nombre,String nick,String funcion,int idEquipo,String correo, String password,String foto)
+        public void CrearJugador(String Nombre,String nick,int idEquipo,String correo, String password,String foto)
         {
 
             using(SqlConnection cn=new SqlConnection(this.configuration.GetConnectionString("cadenaSqlserver")))
@@ -73,7 +88,7 @@ namespace ProyectoFinal.Repositories
                 com.CommandType = System.Data.CommandType.StoredProcedure;
                 com.Parameters.AddWithValue("@nombre", Nombre);
                 com.Parameters.AddWithValue("@Nick", nick);
-                com.Parameters.AddWithValue("@funcion", funcion);
+                com.Parameters.AddWithValue("@funcion", "");
                 com.Parameters.AddWithValue("idEquipo",idEquipo);
                 com.Parameters.AddWithValue("@correo", correo);
                 com.Parameters.AddWithValue("@password",password);
@@ -87,16 +102,30 @@ namespace ProyectoFinal.Repositories
             
 
         }
-        public void ModificarJugador(int id,String nick,String nombre,String Foto,String funcion,String password, int idequipo)
+        public void ModificarJugadorFoto(int id,String nick,String nombre,String Foto,String funcion, int idequipo)
         {
             Jugador jug = GetJugadorId(id);
             jug.Nombre = nombre;
             jug.Nick = nick;
             jug.Foto = Foto;
             jug.Funcion = funcion;
-            jug.Password = password;
             jug.IdEquipo = idequipo;
             this.context.SaveChanges();
+        }
+        public void ModificarJugador(int id, String nick, String nombre,  String funcion, int idequipo)
+        {
+            Jugador jug = GetJugadorId(id);
+            jug.Nombre = nombre;
+            jug.Nick = nick;
+            
+            jug.Funcion = funcion;
+            jug.IdEquipo = idequipo;
+            this.context.SaveChanges();
+        }
+        public String CambiarContraseña(int id,String password)
+        {
+            Jugador jug = GetJugadorId(id);
+            return "";
         }
 
         public void EliminarJugador(int id)
@@ -298,12 +327,12 @@ namespace ProyectoFinal.Repositories
             this.context.SaveChanges();
         }
 
-        public void EliminarPartido(int id)
-        {
-            Partidos game = this.GetPartidoId(id);
-            this.context.Remove(game);
-            this.context.SaveChanges();
-        }
+        //public void EliminarPartido(int id)
+        //{
+        //    Partidos game = this.GetPartidoId(id);
+        //    this.context.Remove(game);
+        //    this.context.SaveChanges();
+        //}
         #endregion
 
     }

@@ -2,64 +2,80 @@
 
 @{
     ViewData["Title"] = "Listado";
+    List<Equipo> equipos = ViewData["Equipos"] as List<Equipo>;
+}
+@section estilos{
+    <style>
+        .contenedor {
+            background-color: lightgray;
+            border: 1px solid lightgray;
+            border-radius: 25px
+        }
+    </style>
 }
 
-<h1>Listado</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Equipo1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Equipo2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ResultadoEquipo1)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ResultadoEquipo2)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.fecha)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Equipo1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Equipo2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ResultadoEquipo1)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ResultadoEquipo2)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.fecha)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="contenedor">
+    <h1>Listado</h1>
+
+
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.Equipo1)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultadoEquipo1)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ResultadoEquipo2)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Equipo2)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.fecha)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+
+                <tr>
+                    <a asp-action="Detalles" asp-controller="Partidos">
+                        <td>
+                            @equipos[item.Equipo1].Nombre
+
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ResultadoEquipo1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ResultadoEquipo2)
+                        </td>
+                        <td>
+                            @equipos[item.Equipo2].Nombre
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.fecha)
+                        </td>
+                    </a>
+                    @if (Context.User.IsInRole("Admin"))
+                    {
+                        <td>
+                            <a class="btn btn-primary" asp-controller="Partidos" asp-action="ModificarPartidos" asp-route-id="@item.Id"> Modificar Partido</a>
+                        </td>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>

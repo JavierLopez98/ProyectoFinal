@@ -47,6 +47,7 @@ namespace ProyectoFinal.Controllers
                     identidad.AddClaim(new Claim(ClaimTypes.NameIdentifier,jug.IdJugador.ToString()));
                     identidad.AddClaim(new Claim(ClaimTypes.Name, jug.Nick));
                     identidad.AddClaim(new Claim(ClaimTypes.Role, jug.Funcion));
+                    identidad.AddClaim(new Claim(ClaimTypes.Surname, jug.Foto));
                     ClaimsPrincipal principal = new ClaimsPrincipal(identidad);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                         principal,
@@ -62,7 +63,7 @@ namespace ProyectoFinal.Controllers
             }
             else
             {
-                return RedirectToAction("SignUp", "Usuarios");
+                return RedirectToAction("SignUp", "Usuario");
             }
         }
 
@@ -78,23 +79,39 @@ namespace ProyectoFinal.Controllers
             return View(equipos);
         }
         [HttpPost]
-        // IdJugador,Nombre,Nick,Funcion,IdEquipo,Correo,Password,Foto
-        public async Task<IActionResult> SignUp(String Nombre,String Nick,String Funcion, int IdEquipo,String correo,String password,IFormFile Foto)
+        
+        public async Task<IActionResult> SignUp(String Nombre,String Nick, int IdEquipo,String correo,String password,IFormFile Foto)
         {
             
             if (Foto != null)
             {
                 String filename = Toolkit.FilenameNormalizer(Foto.FileName);
                 String path = await this.uploader.UploadFileAsync(Foto, Folders.Images);
-                this.repo.CrearJugador(Nombre, Nick, Funcion, IdEquipo, correo, password, filename );
+                this.repo.CrearJugador(Nombre, Nick, IdEquipo, correo, password, filename);
+
             }
+            Jugador jug = this.repo.ExisteJugador(Nick, password);
+            ClaimsIdentity identidad = new ClaimsIdentity(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        ClaimTypes.Name, ClaimTypes.Role
+                        );
+            identidad.AddClaim(new Claim(ClaimTypes.NameIdentifier, jug.IdJugador.ToString()));
+            identidad.AddClaim(new Claim(ClaimTypes.Name, jug.Nick));
+            identidad.AddClaim(new Claim(ClaimTypes.Role, jug.Funcion));
+            identidad.AddClaim(new Claim(ClaimTypes.Surname, jug.Foto));
+            ClaimsPrincipal principal = new ClaimsPrincipal(identidad);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTime.Now.AddMinutes(30)
+                });
+
             return RedirectToAction("Index","Home");
         }
 
-        public IActionResult AccesoDenegado()
-        {
-            return View();
-        }
+        
 
     }
 }

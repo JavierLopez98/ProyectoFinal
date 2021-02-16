@@ -47,7 +47,8 @@ namespace ProyectoFinal.Controllers
         [HttpPost]
         public async  Task<IActionResult> NuevoEquipo(String Nombre,int liga,IFormFile fotoequipo)
         {
-            String filename = fotoequipo.FileName;
+            
+            String filename = Toolkit.FilenameNormalizer(fotoequipo.FileName);
             String ruta = this.provider.MapPath(filename, Folders.Images);
             using (var stream = new FileStream(ruta, FileMode.Create))
             {
@@ -76,7 +77,7 @@ namespace ProyectoFinal.Controllers
             String filename = "";
             if (fotoequipo != null)
             {
-                filename = fotoequipo.FileName;
+                filename = Toolkit.FilenameNormalizer(fotoequipo.FileName);
                 String ruta = this.provider.MapPath(filename, Folders.Images);
 
                 using (var stream = new FileStream(ruta, FileMode.Create))

@@ -1,8 +1,7 @@
-﻿@model ProyectoFinal.Models.Equipo
+﻿@model ProyectoFinal.Models.Liga
 
 @{
-    ViewData["Title"] = "NuevoEquipo";
-    List<Liga> ligas = ViewData["Ligas"] as List<Liga>;
+    ViewData["Title"] = "NuevaLiga";
 }
 @section estilos{
     <style>
@@ -17,13 +16,13 @@
 
 
 <div class="contenedor">
-    <h1>NuevoEquipo</h1>
+    <h1>NuevaLiga</h1>
 
-    <h4>Equipo</h4>
+    <h4>Liga</h4>
     <hr />
     <div class="d-flex justify-content-md-center">
         <div class="col-md-4">
-            <form asp-action="NuevoEquipo" enctype="multipart/form-data">
+            <form asp-action="NuevaLiga">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="form-group">
@@ -32,20 +31,9 @@
                     <span asp-validation-for="Nombre" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Liga" class="control-label"></label>
-                    <select cclass="form-control">
-                        @foreach (Liga liga in ligas)
-                        {
-                            <option value="@liga.IdLiga">@liga.Nombre</option>
-                        }
-                    </select>
-
-                    <span asp-validation-for="Liga" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label>Imagen del equipo:</label>
-                    <input name="fotoequipo" class="form-control-file" type="file" />
-
+                    <label asp-for="Descripcion" class="control-label"></label>
+                    <input asp-for="Descripcion" class="form-control" />
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
@@ -57,7 +45,7 @@
     <div>
         <a asp-action="Index">Back to List</a>
     </div>
-</div>
+    </div>
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     }

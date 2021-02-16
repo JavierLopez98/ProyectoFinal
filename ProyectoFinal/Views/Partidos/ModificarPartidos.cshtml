@@ -1,0 +1,74 @@
+﻿@model ProyectoFinal.Models.Partidos
+
+@{
+    ViewData["Title"] = "ModificarPartidos";
+    List<Equipo> equipos = ViewData["Equipos"] as List<Equipo>;
+}
+
+<h1>ModificarPartidos</h1>
+
+<h4>Partidos</h4>
+<hr />
+<div class="d-flex justify-content-md-center">
+    <div class="col-md-4">
+        <form asp-action="ModificarPartidos">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group" hidden>
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <select name="Equipo1">
+                    <option value="@Model.Equipo1" selected disabled>@equipos[Model.Equipo1].Nombre</option>
+                    @foreach (Equipo eq in equipos)
+                    {
+                        if (eq.IdEquipo > 0)
+                        {
+                            <option value="@eq.IdEquipo">@eq.Nombre</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ResultadoEquipo1" class="control-label"></label>
+                <input asp-for="ResultadoEquipo1" class="form-control" />
+                <span asp-validation-for="ResultadoEquipo1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ResultadoEquipo2" class="control-label"></label>
+                <input asp-for="ResultadoEquipo2" class="form-control" />
+                <span asp-validation-for="ResultadoEquipo2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <select name="Equipo2">
+                    <option value="@Model.Equipo2" selected disabled>@equipos[Model.Equipo2].Nombre</option>
+                    @foreach (Equipo eq in equipos)
+                    {
+                        if (eq.IdEquipo > 0)
+                        {
+                            <option value="@eq.IdEquipo">@eq.Nombre</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="fecha" class="control-label"></label>
+                <input name="fecha" type="date" value="@Model.fecha" class="form-control" />
+                <span asp-validation-for="fecha" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -8,7 +8,7 @@
 
 <h4>Liga</h4>
 <hr />
-<div class="row">
+<div class="d-flex justify-content-md-center">
     <div class="col-md-4">
         <form asp-action="ModificarLiga">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -24,7 +24,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Descripcion" class="control-label"></label>
-                <textarea asp-for="Descripcion" rows="10" cols="40" class="form-control">@Model.Descripcion </textarea>
+                <textarea asp-for="Descripcion" rows="10" cols="40" class="md-textarea form-control">@Model.Descripcion </textarea>
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
             </div>
             <div class="form-group">

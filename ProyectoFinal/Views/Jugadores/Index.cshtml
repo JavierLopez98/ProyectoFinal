@@ -4,69 +4,94 @@
     ViewData["Title"] = "Index";
     List<Equipo> equipos = ViewData["equipos"] as List<Equipo>;
     Equipo equipo = ViewData["Equipo"] as Equipo;
-    
+    int registros = int.Parse(ViewData["Registros"].ToString());
+    int paginas =(int) Math.Ceiling((double) registros / 6);
+
+}
+@section estilos{
+    <style>
+        .contenedor {
+            background-color: lightgray;
+            border: 1px solid lightgray;
+            border-radius: 25px
+        }
+    </style>
 }
 
-<h1>Index</h1>
 
 
-<form method="post">
-    <label>Jugador a buscar:</label>
-    <input type="text" name="nick" />
-    <select class="form-control-sm" name="equipo">
-        @if (equipo != null)
-        {
-            <option value="@equipo.IdEquipo" disabled selected>@equipo.Nombre</option>
-        }
-        else
-        {
-            <option value="" disabled selected>Todos</option>
-        }
-        <option value="">Todos</option>
-        @foreach (Equipo eq in equipos)
-        {
-            <option value="@eq.IdEquipo">@eq.Nombre</option>
-        }
-    </select>
-    <button type="submit" class="btn btn-secondary">Buscar</button>
-</form>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nick)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Funcion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model)
-{
-    if (item.IdJugador > 0)
-    {
-        <tr>
-            <td>
-                <a asp-action="Detalles" asp-controller="Jugadores" asp-route-id="@item.IdJugador">
-                    @Html.DisplayFor(modelItem => item.Nick)
-                </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Funcion)
-            </td>
-            @if (Context.User.IsInRole("Admin"))
+<div class="contenedor">
+    <h1>Listado de Jugadores</h1>
+
+    <form method="post">
+        <label>Jugador a buscar:</label>
+        <input type="text" name="nick" />
+        <select class="form-control-sm" name="equipo">
+            @if (equipo != null)
             {
-        <td>
-            <a class="btn btn-primary" asp-controller="Jugadores" asp-action="ModificarJugador" asp-route-id="@item.IdJugador"> Modificar Jugador</a>
-
-            <a class="btn btn-warning" asp-controller="Jugadores" asp-action="EliminarJugador" asp-route-id="@item.IdJugador"> Eliminar Jugador</a>
-        </td>
+                <option value="@equipo.IdEquipo" disabled selected>@equipo.Nombre</option>
             }
-        </tr>
-    }
-}
-    </tbody>
-</table>
-@ViewData["Mensaje"]
+            else
+            {
+                <option value="" disabled selected>Todos</option>
+            }
+            <option value="">Todos</option>
+            @foreach (Equipo eq in equipos)
+            {
+                <option value="@eq.IdEquipo">@eq.Nombre</option>
+            }
+        </select>
+        <button type="submit" class="btn btn-secondary">Buscar</button>
+    </form>
+    <div>
+        @for (int i = 1; i <= paginas; i++)
+        {
+            <a asp-action="Index" asp-controller="Jugadores" asp-route-pagina="@i">@i</a>
+        }
+    </div>
+    <div class="d-flex justify-content-md-center">
+
+        <div class="col-md-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nick)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Funcion)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        //if (item.IdJugador > 0)
+                        //{
+                            <tr>
+                                <td>
+                                    <a asp-action="Detalles" asp-controller="Jugadores" asp-route-id="@item.IdJugador">
+                                        @Html.DisplayFor(modelItem => item.Nick)
+                                    </a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Funcion)
+                                </td>
+                                @if (Context.User.IsInRole("Admin"))
+                                {
+                                    <td>
+                                        <a class="btn btn-primary" asp-controller="Jugadores" asp-action="ModificarJugador" asp-route-id="@item.IdJugador"> Modificar Jugador</a>
+
+                                        <a class="btn btn-warning" asp-controller="Jugadores" asp-action="EliminarJugador" asp-route-id="@item.IdJugador"> Eliminar Jugador</a>
+                                    </td>
+                                }
+                            </tr>
+                        //}
+                    }
+                </tbody>
+            </table>
+            </div>
+        </div>
+            @ViewData["Mensaje"]
+        </div>
