@@ -35,7 +35,7 @@
         </li>*@
             </ul>
             <div class="form-inline my-2 my-lg-0">
-                <a asp-controller="Usuario" asp-action="Login" class="nav-item">Sign in</a>
+                <a asp-controller="Usuario" asp-action="Login" class="nav-item btn btn-secondary">Sign in</a>
             </div>
         </div>
     </nav>
@@ -84,7 +84,7 @@ else
 
                         <li class="nav-item dropdown">
 
-                            <a class="nav-link dropdown-toggle" asp-action="Index" asp-controller="Jugadores" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@Context.User.Identity.Name</a>
+                            <a class="nav-link dropdown-toggle btn btn-secondary" asp-action="Index" asp-controller="Jugadores" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@Context.User.Identity.Name</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                                 <a class="dropdown-item" asp-action="Perfil" asp-controller="Jugadores">Perfil</a>
                                 <a asp-action="Logout" asp-controller="Usuario" class="dropdown-item">Log out</a>
@@ -142,7 +142,7 @@ else
                 <div class="form-inline my-2 my-lg-0">
                        
                             
-                            <a asp-action="Logout" asp-controller="Usuario" class="nav-item">Log out</a>
+                            <a asp-action="Logout" asp-controller="Usuario" class="nav-item btn btn-secondary">Log out</a>
                         
                 </div>
             </div>

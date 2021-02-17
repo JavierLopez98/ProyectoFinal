@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Detalles";
+    Equipo eq = ViewData["Equipo"] as Equipo;
 }
 
 <h1>Detalles</h1>
@@ -10,28 +11,36 @@
     <h4>Jugador</h4>
     <hr />
     <dl class="row">
-        
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nombre)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Nombre)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Nick)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Nick)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Funcion)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Funcion)
         </dd>
-        
-        <dd class = "col-sm-10">
-           <img src="~/Images/@Model.Foto" style="width:300px;height:auto"/>
+        <dt class="col-sm-2">
+            Equipo
+        </dt>
+        <dd class="col-sm-10">
+            <a asp-controller="Equipo" asp-action="Detalles" asp-route-id="@eq.IdEquipo">
+                @eq.Nombre
+            </a>
+        </dd>
+
+        <dd class="col-sm-10">
+            <img src="~/Images/@Model.Foto" style="width:300px;height:auto" />
         </dd>
     </dl>
 </div>

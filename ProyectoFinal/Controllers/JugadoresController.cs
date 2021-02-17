@@ -75,7 +75,9 @@ namespace ProyectoFinal.Controllers
        
         public IActionResult Detalles(int id)
         {
-            return View(this.repo.GetJugadorId(id));
+            Jugador jug = this.repo.GetJugadorId(id);
+            ViewData["Equipo"] = this.repo.GetEquipoId(jug.IdEquipo);
+            return View(jug);
         }
         [AuthorizeUsuario]
         public IActionResult Perfil()
@@ -83,7 +85,24 @@ namespace ProyectoFinal.Controllers
             String dato = User.FindFirst(ClaimTypes.NameIdentifier).Value.ToString();
             int id = int.Parse(dato);
             Jugador jug = this.repo.GetJugadorId(id);
+            ViewData["Equipo"] = this.repo.GetEquipoId(jug.IdEquipo);
             return View(jug);
+        }
+        public IActionResult CambiarContraseña(int id)
+        {
+            ViewData["Mensaje"] = "";
+            return View(this.repo.GetJugadorId(id));
+        }
+        [HttpPost]
+        public IActionResult CambiarContraseña(int id,String nueva,String copia)
+        {
+            if (nueva != copia)
+            {
+                ViewData["Mensaje"] = "Las contraseñas no coinciden";
+                return View();
+            }
+            this.repo.CambiarContraseña(id,nueva);
+            return RedirectToAction("Perfil", "Jugadores");
         }
 
         public IActionResult ModificarJugador(int id)

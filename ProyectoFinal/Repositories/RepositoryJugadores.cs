@@ -122,10 +122,12 @@ namespace ProyectoFinal.Repositories
             jug.IdEquipo = idequipo;
             this.context.SaveChanges();
         }
-        public String CambiarContraseña(int id,String password)
+        public void CambiarContraseña(int id,String password)
         {
             Jugador jug = GetJugadorId(id);
-            return "";
+            jug.Password = password;
+            this.context.SaveChanges();
+            
         }
 
         public void EliminarJugador(int id)
@@ -293,6 +295,15 @@ namespace ProyectoFinal.Repositories
         public Partidos GetPartidoId(int id)
         {
             return this.context.Partidos.Where(z => z.Id == id).SingleOrDefault();
+        }
+        public List<Partidos> GetPartidosPaginados(int pagina)
+        {
+            return this.context.Partidos.Page(ElementosPagina, pagina).ToList();
+        }
+
+        public List<Partidos> GetPartidosEquipo(int equipo)
+        {
+            return this.context.Partidos.Where(x => x.Equipo1 == equipo || x.Equipo2 == equipo).ToList();
         }
         public void NuevoPartido(int equipo1,int equipo2,int resultado1,int resultado2,String fecha)
         {

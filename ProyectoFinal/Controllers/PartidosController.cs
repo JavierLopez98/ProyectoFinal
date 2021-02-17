@@ -15,10 +15,28 @@ namespace ProyectoFinal.Controllers
         {
             this.repo = repo;
         }
-        public IActionResult Listado()
+        public IActionResult Listado(int? equipo, int? pagina)
         {
+            Equipo eq = new Equipo();
+            List<Partidos> partidos = new List<Partidos>();
+            if (pagina == null)
+            {
+                pagina = 1;
+            }
+
+            if (equipo != null)
+            {
+                eq = this.repo.GetEquipoId(equipo.Value);
+                partidos = this.repo.GetPartidosEquipo(equipo.Value);
+            }
+            else
+            {
+                partidos = this.repo.GetPartidosPaginados(pagina.Value-1);
+            }
+            ViewData["registros"] = this.repo.GetPartidos().Count;
+            ViewData["Equipo"] = eq;
             ViewData["Equipos"] = this.repo.GetEquipos();
-            return View(this.repo.GetPartidos());
+            return View(partidos);
         }
 
         public IActionResult NuevoPartido()

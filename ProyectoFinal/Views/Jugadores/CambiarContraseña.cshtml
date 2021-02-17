@@ -1,0 +1,60 @@
+﻿@model ProyectoFinal.Models.Jugador
+
+@{
+    ViewData["Title"] = "CambiarContraseña";
+}
+
+@section estilos{
+    <style>
+        .contenedor {
+            background-color: lightgray;
+            border: 1px solid lightgray;
+            border-radius: 25px
+        }
+    </style>
+}
+
+
+<div class="contenedor">
+
+    <h1>Cambiar Contraseña</h1>
+
+
+    <hr />
+
+
+    <div class="d-flex justify-content-md-center">
+        <div class="col-md-4">
+            <div class="row">
+                <h3 style="color:red">@ViewData["Mensaje"]</h3>
+                <form asp-action="CambiarContraseña">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group" hidden>
+                        <label asp-for="IdJugador" class="control-label"></label>
+                        <input name="id" value="@Model.IdJugador" class="form-control" />
+                        <span asp-validation-for="IdJugador" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Nueva contraseña</label>
+                        <input name="nueva" type="password" class="form-control" />
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Repita la contraseña</label>
+                        <input name="Copia" type="password" class="form-control" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

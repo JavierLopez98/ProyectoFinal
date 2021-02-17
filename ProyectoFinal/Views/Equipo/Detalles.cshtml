@@ -7,35 +7,47 @@
 @section estilos{
     
     <link href="~/css/ImagenHover.css" rel="stylesheet" />
+    <style>
+        .contenedorimagenes{
+            align-items:center;
+            position:absolute;
+            left:30%
+        }
+        .contenedorimagenes img{
+            margin-left:10px
+        }
+        .contenedor {
+            background-color: lightgray;
+            border: 1px solid lightgray;
+            border-radius: 25px
+        }
+    </style>
 }
 
-<h1>Detalles</h1>
-
-
-<h1>@Model.Nombre</h1>
-
-<img src="~/Images/@Model.Foto" style="width:300px;height:400px" />
-
-@*div>
-
-    <a>
-        <img src= style="width:150px;height:200px" />
-        <div class="overlay">
-            
-        </div>
-    </a>
-
-</div>*@
-
 <div class="contenedor">
-    @foreach (Jugador jug in jugadores)
-    {
-        <div class="hovereffect">
-            <img class="img-responsive" src="~/Images/@jug.Foto" style="width:150px;height:200px" alt="">
-            <div class="overlay">
-                @*<h2>Hover effect 1</h2>*@
-                <a asp-action="Detalles" asp-controller="Jugadores" asp-route-id="@jug.IdJugador" class="info">Detalles</a>
+    <h1>Detalles</h1>
+    <h1>@Model.Nombre</h1>
+    <img src="~/Images/@Model.Foto" style="width:300px;height:400px" />
+    @*div>
+
+            <a>
+                <img src= style="width:150px;height:200px" />
+                <div class="overlay">
+
+                </div>
+            </a>
+
+        </div>*@
+    <div class="contenedorimagenes">
+        @foreach (Jugador jug in jugadores)
+        {
+            <div class="hovereffect">
+                <img class="img-responsive" src="~/Images/@jug.Foto" style="width:150px;height:200px" alt="">
+                <div class="overlay">
+                    @*<h2>Hover effect 1</h2>*@
+                    <a asp-action="Detalles" asp-controller="Jugadores" asp-route-id="@jug.IdJugador" class="info">Detalles</a>
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>

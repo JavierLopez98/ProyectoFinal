@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Listado";
     List<Equipo> equipos = ViewData["Equipos"] as List<Equipo>;
+    Equipo equipo = ViewData["Equipo"] as Equipo;
+    int registros = int.Parse(ViewData["Registros"].ToString());
+    int paginas = (int)Math.Ceiling((double)registros / 6);
 }
 @section estilos{
     <style>
@@ -19,7 +22,31 @@
 <div class="contenedor">
     <h1>Listado</h1>
 
-
+    <form method="get">
+        <select class="form-control-sm" name="equipo">
+            
+            @if (equipo != null)
+            {
+                <option value="@equipo.IdEquipo" disabled selected>@equipo.Nombre</option>
+            }
+            else
+            {
+                <option value="" disabled selected>Todos</option>
+            }
+            <option value="">Todos</option>
+            @foreach (Equipo eq in equipos)
+            {
+                <option value="@eq.IdEquipo">@eq.Nombre</option>
+            }
+        </select>
+        <button type="submit" class="btn btn-secondary">Buscar</button>
+    </form>
+    <div>
+        @for (int i = 1; i <= paginas; i++)
+        {
+            <a asp-action="Listado" asp-controller="Partidos" asp-route-pagina="@i">@i</a>
+        }
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -78,4 +105,4 @@
             }
         </tbody>
     </table>
-    </div>
+</div>
