@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models;
 using ProyectoFinal.Repositories;
+using ProyectoFinal.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,59 +12,63 @@ namespace ProyectoFinal.Controllers
     public class LigasController : Controller
     {
         RepositoryJugadores repo;
+        ServiceEquipos service;
+        
 
-        public LigasController(RepositoryJugadores repo)
+        public LigasController(RepositoryJugadores repo,ServiceEquipos service)
         {
             this.repo = repo;
+            this.service = service;
         }
 
-        public IActionResult Index(String nombre)
+        public async Task<IActionResult> Index(String nombre)
         {
             if (nombre != null)
             {
-                return View(this.repo.GetLigasNombre(nombre));
+                return View(await this.service.BuscarLigaNombreAsync(nombre));
             }
-            return View(this.repo.GetLigas());
+            return View(await this.service.GetLigasAsync());
         }
 
-        public IActionResult Detalles(int id)
+        public async Task<IActionResult> Detalles(int id)
         {
-            return View(this.repo.GetLigaId(id));
+            return View(await this.service.BuscarLigaAsync(id));
         }
 
-        public IActionResult ModificarLiga(int id)
+        public async Task<IActionResult> ModificarLiga(int id)
         {
 
-            return View(this.repo.GetLigaId(id));
+            return View(await this.service.BuscarLigaAsync(id));
         }
         [HttpPost]
-        public IActionResult ModificarLiga(Liga lig)
+        public async Task<IActionResult> ModificarLiga(Liga lig)
         {
-            this.repo.ModificarLiga(lig.IdLiga, lig.Nombre, lig.Descripcion);
+            await this.service.ModificarLigaAsync(lig.IdLiga, lig.Nombre, lig.Descripcion);
+            
             return RedirectToAction("Index", "Ligas");
         }
-        public IActionResult NuevaLiga()
+        public async Task<IActionResult> NuevaLiga()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult NuevaLiga(Liga lig)
+        public async Task<IActionResult> NuevaLiga(Liga lig)
         {
-            this.repo.NuevaLiga(lig.Nombre, lig.Descripcion);
-            return RedirectToAction("Index", "Liga");
+            await this.service.InsertarLigaAsync(lig.Nombre, lig.Descripcion);
+            return RedirectToAction("Index", "Ligas");
         }
-        public IActionResult EliminarLiga(int id)
+        public async Task<IActionResult> EliminarLiga(int id)
         {
-            return View(this.repo.GetLigaId(id));
+            return View(await this.service.BuscarLigaAsync(id));
         }
         [HttpPost]
-        public IActionResult EliminarLiga(int id,String accion)
+        public async Task<IActionResult> EliminarLiga(int id,String accion)
         {
             if (accion == "Delete")
             {
-                this.repo.EliminarLiga(id);
+                await this.service.EliminarLigaAsync(id);
             }
-            return RedirectToAction("Index", "Liga");
+            return RedirectToAction("Index", "Ligas");
         }
     }
 }

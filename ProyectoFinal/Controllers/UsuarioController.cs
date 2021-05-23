@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Helpers;
 using ProyectoFinal.Models;
 using ProyectoFinal.Repositories;
+using ProyectoFinal.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -17,13 +19,17 @@ namespace ProyectoFinal.Controllers
     {
         RepositoryJugadores repo;
         FileUploader uploader;
+        ServiceEquipos service;
+        ServiceStorageFile storageFile;
 
-        public UsuarioController(RepositoryJugadores repo,FileUploader uploader)
+        public UsuarioController(RepositoryJugadores repo, FileUploader uploader, ServiceEquipos service, ServiceStorageFile storageFile)
         {
             this.repo = repo;
             this.uploader = uploader;
+            this.service = service;
+            this.storageFile = storageFile;
         }
-        public IActionResult Login()
+        public async Task<IActionResult> Login()
         {
             return View();
         }
@@ -32,7 +38,7 @@ namespace ProyectoFinal.Controllers
         {
             if (accion == "entrar")
             {
-                Jugador jug = this.repo.ExisteJugador(user, password);
+                Jugador jug = await this.service.ExisteJugador(user, password);
                 if (jug == null)
                 {
                     ViewData["Mensaje"] = "Usuario/Password Incorrectos";
@@ -73,9 +79,9 @@ namespace ProyectoFinal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult SignUp()
+        public async Task<IActionResult> SignUp()
         {
-            List<Equipo>equipos=this.repo.GetEquipos();
+            List<Equipo>equipos=await this.service.GetEquiposAsync();
             return View(equipos);
         }
         [HttpPost]
@@ -83,13 +89,16 @@ namespace ProyectoFinal.Controllers
         public async Task<IActionResult> SignUp(String Nombre,String Nick, int IdEquipo,String correo,String password,IFormFile Foto)
         {
             
-            if (Foto != null)
-            {
+           
                 String filename = Toolkit.FilenameNormalizer(Foto.FileName);
-                String path = await this.uploader.UploadFileAsync(Foto, Folders.Images);
-                this.repo.CrearJugador(Nombre, Nick, IdEquipo, correo, password, filename);
-
-            }
+                //String path = await this.uploader.UploadFileAsync(Foto, Folders.Images);
+                using (var stream = Foto.OpenReadStream())
+                {
+                    await this.storageFile.UploadFile(Foto, Nombre);
+                }
+                await this.service.InsertarJugador(Nombre, Nick, IdEquipo, correo, password, Nombre+filename);
+                this.repo.CrearJugador(Nombre, Nick, IdEquipo, correo, password, "defaultuserimage.png");
+            
             Jugador jug = this.repo.ExisteJugador(Nick, password);
             ClaimsIdentity identidad = new ClaimsIdentity(
                         CookieAuthenticationDefaults.AuthenticationScheme,

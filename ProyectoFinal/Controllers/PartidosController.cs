@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models;
 using ProyectoFinal.Repositories;
+using ProyectoFinal.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,13 @@ namespace ProyectoFinal.Controllers
     public class PartidosController : Controller
     {
         RepositoryJugadores repo;
-        public PartidosController(RepositoryJugadores repo)
+        ServiceEquipos service;
+        public PartidosController(RepositoryJugadores repo,ServiceEquipos service)
         {
             this.repo = repo;
+            this.service = service;
         }
-        public IActionResult Listado(int? equipo, int? pagina)
+        public async Task<IActionResult> Listado(int? equipo, int? pagina)
         {
             Equipo eq = new Equipo();
             List<Partidos> partidos = new List<Partidos>();
@@ -26,26 +29,27 @@ namespace ProyectoFinal.Controllers
 
             if (equipo != null)
             {
-                eq = this.repo.GetEquipoId(equipo.Value);
-                partidos = this.repo.GetPartidosEquipo(equipo.Value);
+                eq = await this.service.BuscarEquipoAsync(equipo.Value);
+                partidos = await this.service.BuscarPartidosEquiposAsync(equipo.Value);
             }
             else
             {
-                partidos = this.repo.GetPartidosPaginados(pagina.Value-1);
+                partidos = await this.service.PaginarPartidosAsync(pagina.Value-1);
             }
-            ViewData["registros"] = this.repo.GetPartidos().Count;
+            List<Partidos> registros= await this.service.GetPartidosAsync();
+            ViewData["registros"] = registros.Count;
             ViewData["Equipo"] = eq;
-            ViewData["Equipos"] = this.repo.GetEquipos();
+            ViewData["Equipos"] = await this.service.GetEquiposAsync();
             return View(partidos);
         }
 
-        public IActionResult NuevoPartido()
+        public async Task<IActionResult> NuevoPartido()
         {
-            ViewData["equipos"] = this.repo.GetEquipos();
+            ViewData["equipos"] = await this.service.GetEquiposAsync();
             return View();
         }
         [HttpPost]
-        public IActionResult NuevoPartido(int Equipo1,int Equipo2,int ResultadoEquipo1,int ResultadoEquipo2,DateTime fecha)
+        public async Task<IActionResult> NuevoPartido(int Equipo1,int Equipo2,int ResultadoEquipo1,int ResultadoEquipo2,DateTime fecha)
         {
             if (Equipo1 == Equipo2)
             {
@@ -57,16 +61,16 @@ namespace ProyectoFinal.Controllers
             return RedirectToAction("Listado", "Partidos");
         }
 
-        public IActionResult ModificarPartidos(int id)
+        public async Task<IActionResult> ModificarPartidos(int id)
         {
-            ViewData["equipos"] = this.repo.GetEquipos();
-            return View(this.repo.GetPartidoId(id));
+            ViewData["equipos"] = await this.service.GetEquiposAsync();
+            return View(this.service.BuscarPartidosAsync(id));
         }
         [HttpPost]
-        public IActionResult ModificarPartidos(int id,int Equipo1, int Equipo2, int ResultadoEquipo1, int ResultadoEquipo2, DateTime fecha)
+        public async Task<IActionResult> ModificarPartidos(int id,int Equipo1, int Equipo2, int ResultadoEquipo1, int ResultadoEquipo2, DateTime fecha)
         {
             String fechapartido = fecha.ToShortDateString();
-            this.repo.ModificarPartido(id,Equipo1, Equipo2, ResultadoEquipo1, ResultadoEquipo2, fechapartido);
+            await this.service.ModificarPartidos(id,Equipo1, Equipo2, ResultadoEquipo1, ResultadoEquipo2, fechapartido);
             return RedirectToAction("Listado", "Partidos");
         }
     }

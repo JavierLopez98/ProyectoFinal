@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProyectoFinal.Models
 {
-    [Table("Equipos")]
+    //[Table("Equipos")]
     public class Equipo
     {
         [Key]

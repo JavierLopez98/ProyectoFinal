@@ -1,3 +1,4 @@
+using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using ProyectoFinal.Data;
 using ProyectoFinal.Helpers;
 using ProyectoFinal.Repositories;
+using ProyectoFinal.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,11 +41,16 @@ namespace ProyectoFinal
 
 
             String cadenaServer = this.configuration.GetConnectionString("cadenaSqlserver");
+            String cadenaapi = this.configuration.GetConnectionString("urlApiEquipos");
 
             services.AddSingleton<IConfiguration>(this.configuration);
+            services.AddDefaultAWSOptions(configuration.GetAWSOptions());
+            services.AddAWSService<IAmazonS3>();
             services.AddSingleton<FileUploader>();
             services.AddTransient<PathProvider>();
             services.AddTransient<RepositoryJugadores>();
+            services.AddTransient<ServiceEquipos>();
+            services.AddTransient<ServiceStorageFile>();
 
             services.AddDbContext<EquipoContext>(options => options.UseSqlServer(cadenaServer));
 

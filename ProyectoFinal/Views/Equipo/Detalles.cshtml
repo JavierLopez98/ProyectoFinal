@@ -11,7 +11,9 @@
         .contenedorimagenes{
             align-items:center;
             position:absolute;
-            left:30%
+            left:30%;
+            
+            
         }
         .contenedorimagenes img{
             margin-left:10px
@@ -19,7 +21,8 @@
         .contenedor {
             background-color: lightgray;
             border: 1px solid lightgray;
-            border-radius: 25px
+            border-radius: 25px;
+            height:500px
         }
     </style>
 }
@@ -27,7 +30,8 @@
 <div class="contenedor">
     <h1>Detalles</h1>
     <h1>@Model.Nombre</h1>
-    <img src="~/Images/@Model.Foto" style="width:300px;height:400px" />
+    
+    <img src="https://fotosjlc.s3.amazonaws.com/@Model.Foto" style="width:140px;height:120px" />
     @*div>
 
             <a>
@@ -38,11 +42,12 @@
             </a>
 
         </div>*@
+    <hr />
     <div class="contenedorimagenes">
         @foreach (Jugador jug in jugadores)
         {
             <div class="hovereffect">
-                <img class="img-responsive" src="~/Images/@jug.Foto" style="width:150px;height:200px" alt="">
+                <img class="img-responsive" src="https://fotosjlc.s3.amazonaws.com/@jug.Foto" style="width:150px;height:200px" alt="">
                 <div class="overlay">
                     @*<h2>Hover effect 1</h2>*@
                     <a asp-action="Detalles" asp-controller="Jugadores" asp-route-id="@jug.IdJugador" class="info">Detalles</a>

@@ -4,6 +4,7 @@ using ProyectoFinal.Filters;
 using ProyectoFinal.Helpers;
 using ProyectoFinal.Models;
 using ProyectoFinal.Repositories;
+using ProyectoFinal.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,55 +18,59 @@ namespace ProyectoFinal.Controllers
     {
         RepositoryJugadores repo;
         PathProvider provider;
-        public JugadoresController(RepositoryJugadores repo,PathProvider provider)
+        ServiceEquipos service;
+        ServiceStorageFile storageFile;
+        public JugadoresController(RepositoryJugadores repo, PathProvider provider, ServiceEquipos service, ServiceStorageFile storageFile)
         {
+            this.service = service;
+            this.storageFile = storageFile;
             this.repo = repo;
             this.provider = provider;
         }
-        public IActionResult Index(int? pagina)
+        public async Task<IActionResult> Index(int? pagina)
         {
 
             if (pagina == null)
             {
                 pagina = 1;
             }
-            
-            ViewData["Equipos"] = this.repo.GetEquipos();
-            ViewData["registros"] = this.repo.GetJugadores().Count;
-            return View(this.repo.PaginarJugador(pagina.Value-1));
+            List<Jugador> registro= await this.service.GetJugadoresAsync();
+            ViewData["Equipos"] = await this.service.GetEquiposAsync();
+            ViewData["registros"] = registro.Count();
+            return View(await this.service.PaginarJugadores(pagina.Value-1));
             
             
         }
         [HttpPost]
-        public IActionResult Index(String nick,int?equipo)
+        public async Task<IActionResult> Index(String nick,int?equipo)
         {
             ViewData["Equipo"] = new Equipo();
-            ViewData["Equipos"] = this.repo.GetEquipos();
-            ViewData["registros"] = this.repo.GetJugadores().Count;
+            ViewData["Equipos"] =await this.service.GetEquiposAsync();
+            ViewData["registros"] = await this.service.GetJugadoresAsync();
             List<Jugador> jugadores;
            
             if (equipo != null)
             {
-                ViewData["Equipo"] = this.repo.GetEquipoId(equipo.Value);
+                ViewData["Equipo"] = await this.service.BuscarEquipoAsync(equipo.Value);
                 if (nick != null)
                 {
-                    jugadores = this.repo.getJugadorNickEquipo(nick, equipo.Value);
+                    jugadores = await this.service.GetJugadoresEquipoAsync(nick, equipo.Value);
                 }
                 else
                 {
-                    jugadores = this.repo.GetJugadoresEquipo(equipo.Value);
+                    jugadores = await this.service.GetJugadoresEquipoAsync(equipo.Value);
                 }
             }
             else
             {
                 if (nick != null)
                 {
-                    jugadores = this.repo.buscarJugadorNick(nick);
+                    jugadores = await this.service.BuscarJugadoresNickAsync(nick);
                     
                 }
                 else
                 {
-                    jugadores = this.repo.PaginarJugador(0);
+                    jugadores = await this.service.PaginarJugadores(0);
                         if (jugadores.Count() == 0) ViewData["Mensaje"] = "No se han encontrado jugadores";
                 }
                 
@@ -73,43 +78,44 @@ namespace ProyectoFinal.Controllers
             return View(jugadores);
         }
        
-        public IActionResult Detalles(int id)
+        public async Task<IActionResult> Detalles(int id)
         {
-            Jugador jug = this.repo.GetJugadorId(id);
-            ViewData["Equipo"] = this.repo.GetEquipoId(jug.IdEquipo);
+            Jugador jug = await this.service.BuscarJugadorAsync(id);
+            ViewData["Equipo"] = await this.service.BuscarEquipoAsync(jug.IdEquipo);
             return View(jug);
         }
         [AuthorizeUsuario]
-        public IActionResult Perfil()
+        public async Task<IActionResult> Perfil()
         {
             String dato = User.FindFirst(ClaimTypes.NameIdentifier).Value.ToString();
             int id = int.Parse(dato);
-            Jugador jug = this.repo.GetJugadorId(id);
-            ViewData["Equipo"] = this.repo.GetEquipoId(jug.IdEquipo);
+            Jugador jug = await this.service.BuscarJugadorAsync(id);
+            ViewData["Equipo"] = await this.service.BuscarEquipoAsync(jug.IdEquipo);
             return View(jug);
         }
-        public IActionResult CambiarContraseña(int id)
+        public async Task<IActionResult> CambiarContraseña(int id)
         {
             ViewData["Mensaje"] = "";
-            return View(this.repo.GetJugadorId(id));
+            return View(await this.service.BuscarJugadorAsync(id));
         }
         [HttpPost]
-        public IActionResult CambiarContraseña(int id,String nueva,String copia)
+        public async Task<IActionResult> CambiarContraseña(int id,String nueva,String copia)
         {
             if (nueva != copia)
             {
                 ViewData["Mensaje"] = "Las contraseñas no coinciden";
                 return View();
             }
+            //await this.service.ModificarJugador(id,nombre,nick,idequipo,correo,copia,foto);
             this.repo.CambiarContraseña(id,nueva);
             return RedirectToAction("Perfil", "Jugadores");
         }
 
-        public IActionResult ModificarJugador(int id)
+        public async Task<IActionResult> ModificarJugador(int id)
         {
-            Jugador jug = this.repo.GetJugadorId(id);
-            ViewData["Equipo"] = this.repo.GetEquipoId(jug.IdEquipo);
-            ViewData["Equipos"] = this.repo.GetEquipos();
+            Jugador jug = await this.service.BuscarJugadorAsync(id);
+            ViewData["Equipo"] = await this.service.BuscarEquipoAsync(jug.IdEquipo);
+            ViewData["Equipos"] = await this.service.GetEquiposAsync();
             return View(jug);
         }
         [HttpPost]
@@ -137,17 +143,17 @@ namespace ProyectoFinal.Controllers
             return RedirectToAction("Index", "Jugadores");
         }
 
-        public IActionResult EliminarJugador(int id)
+        public async Task<IActionResult> EliminarJugador(int id)
         {
-            return View(this.repo.GetJugadorId(id));
+            return View(await this.service.BuscarJugadorAsync(id));
         }
 
         [HttpPost]
-        public IActionResult EliminarJugador(int id,String accion)
+        public async Task<IActionResult> EliminarJugador(int id,String accion)
         {
             if (accion == "Delete")
             {
-                this.repo.EliminarJugador(id);
+                await this.service.EliminarEquipoAsync(id);
             }
 
             return RedirectToAction("Index", "Jugadores");
