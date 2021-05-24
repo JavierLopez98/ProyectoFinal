@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using ProyectoFinal.Models;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ namespace ProyectoFinal.Services
     {
         private Uri Uriapi;
         private MediaTypeWithQualityHeaderValue header;
-        public ServiceEquipos()
+        public ServiceEquipos(IConfiguration config)
         {
-            this.Uriapi = new Uri("http://54.227.96.93/");
+            this.Uriapi = new Uri(config.GetConnectionString("urlApiEquipos"));
             this.header = new MediaTypeWithQualityHeaderValue("application/json");
         }
         #region Jugador
